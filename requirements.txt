@@ -1,0 +1,3 @@
+comtypes
+pefile==2022.5.30
+requests

@@ -70,8 +70,10 @@ class PEFile(pefile.PE):
                 pdbPath = localCache + pdbUrl
                 pdbPath = os.path.realpath(pdbPath)
             if not os.path.exists(pdbPath):
+                r = requests.get(SYMBOLS_SERVER + pdbUrl)
+                r.raise_for_status()
                 with open(pdbPath, 'wb') as f:
-                    f.write(requests.get(SYMBOLS_SERVER + pdbUrl).content)
+                    f.write(r.content)
             if pdbPath != pdbFileName:
                 shutil.copyfile(pdbPath, pdbFileName)
         self.pdbFileName = pdbFileName
@@ -207,10 +209,14 @@ def GUIDToStr(guidbytes):
 def printGuidSym(symName):
     print("%s: %s" % (symName, GUIDToStr(symMap[symName].readData())))
 
-printGuidSym("IID_IVirtualDesktopManagerInternal")
-printGuidSym("IID_IVirtualDesktop")
-printGuidSym("IID_IVirtualDesktopManager")
-printGuidSym("IID_IVirtualDesktopPinnedApps")
+# printGuidSym("IID_IVirtualDesktopManagerInternal")
+# printGuidSym("IID_IVirtualDesktop")
+# printGuidSym("IID_IVirtualDesktopManager")
+# printGuidSym("IID_IVirtualDesktopPinnedApps")
+
+for (k, _) in symMap.items():
+    if "IID_IVirtualDesktop" in k:
+        printGuidSym(k)
 
 
 # In[8]:
@@ -231,7 +237,11 @@ def dumpVFT(vftName):
 
 #symMap['??_7CVirtualDesktopManager@@6BIVirtualDesktopManagerInternal@@@'].pe
 
-dumpVFT('??_7CVirtualDesktopManager@@6BIVirtualDesktopManagerInternal@@@')
+for (k, _) in symMap.items():
+    if "??_7CVirtualDesktop" in k:
+        dumpVFT(k)
+
+# dumpVFT('??_7CVirtualDesktopManager@@6BIVirtualDesktopManagerInternal@@@')
 dumpVFT('??_7VirtualDesktopsApi@@6B@')
 
 
