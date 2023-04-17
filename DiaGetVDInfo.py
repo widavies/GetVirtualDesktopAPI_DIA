@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
+import sys
 
 # In[1]:
 
@@ -8,7 +9,8 @@ import comtypes
 import comtypes.client
 
 # this has to be before the import that follows
-msdia = comtypes.client.GetModule(r'C:\Program Files (x86)\Common Files\Microsoft Shared\VC\amd64\msdia80.dll')
+path = r"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\msdia140.dll"
+msdia = comtypes.client.GetModule(path)
 
 from comtypes.gen.Dia2Lib import *
 
@@ -28,6 +30,7 @@ import requests
 import shutil    
 
 SYMBOLS_SERVER = 'https://msdl.microsoft.com/download/symbols'
+
 
 class PEFile(pefile.PE):
     def __init__(self, path):
@@ -89,16 +92,22 @@ class PEFile(pefile.PE):
             raise
         self.pdbObj = diaSession
 
-twinuipcshell = PEFile(r"C:\Windows\System32\twinui.pcshell.dll")
-twinuipcshell.loadPDB()
-actxprxy = PEFile(r"C:\Windows\System32\actxprxy.dll")
-actxprxy.loadPDB()
 
+path = "C:\\Windows\\Sysnative\\twinui.pcshell.dll"
+print(path)
+print(os.path.isfile(path))
+
+twinuipcshell = PEFile(path)
+twinuipcshell.loadPDB()
+actxprxy = PEFile(r"C:\Windows\Sysnative\actxprxy.dll")
+actxprxy.loadPDB()
 
 # In[3]:
 
 
 udtEnumToStr = ('struct', 'class', 'union', 'interface')
+
+
 # Utility class for capturing some of the data from UDT symbol list in PDB file
 class PDBSymbol:
 
