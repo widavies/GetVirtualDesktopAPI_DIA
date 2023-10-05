@@ -17,3 +17,9 @@ see VirtualDesktopAPI_25247.log
 ## Develop
 
 Use jupyter notebook to open DiaGetVDInfo.ipynb
+
+### If it doesn't work
+
+- You may have to switch `SysNative` with `System32`
+- https://github.com/NyaMisty/GetVirtualDesktopAPI_DIA/issues/1
+- New versions of pefile don't work
